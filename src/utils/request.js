@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
-const TimeOut = 1
+const TimeOut = 3600
 // 对比时间是否超时
 function IsCheckTimeOut() {
   const currentTime = Date.now() // 时间2 接口真正调用的时间
