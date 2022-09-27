@@ -21,7 +21,7 @@ export default {
       state.token = null
     },
     SET_HRSAAS_TIME(state, hrsaasTime) {
-      state.hrsaasTime = hrsaasTime // 属于获取到token的时间
+      state.hrsaasTime = hrsaasTime // 属于时间1 属于获取到token的时间
     }
   },
   actions: {

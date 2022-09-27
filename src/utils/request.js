@@ -2,6 +2,14 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import router from '@/router'
+const TimeOut = 1
+// 对比时间是否超时
+function IsCheckTimeOut() {
+  const currentTime = Date.now() // 时间2 接口真正调用的时间
+  const timeStamp = (currentTime - store.getters.hrsaasTime) / 1000
+  return timeStamp > TimeOut // true 超时 /false 没有超时
+}
 
 // 通过axios创建axios实例
 const service = axios.create({
@@ -9,9 +17,16 @@ const service = axios.create({
   timeout: 5000
 })
 
+// 请求拦截器
 service.interceptors.request.use(config => {
   // 在这个位置需要统一的去注入token
   if (store.getters.token) {
+    // 时间2-时间1 > token 超时的时间 ==> token登录失败
+    if (IsCheckTimeOut()) { // 超时
+      store.dispatch('user/logout')
+      router.push('/login')
+      return Promise.reject(new Error('token 超时'))
+    }
     // 如果token存在 注入token
     config.headers['Authorization'] = `Bearer ${store.getters.token}`
   }
@@ -34,7 +49,14 @@ service.interceptors.response.use(response => {
   Message.error(message)
   return Promise.reject(new Error(message))
 }, error => {
-  Message.error(error.message)
+  // console.log(error.response)
+  if (error.response.status === 401) {
+    store.dispatch('user/logout')
+    router.push('/login')
+    Message.error('token 超时')
+  } else {
+    Message.error(error.message)
+  }
   return Promise.reject(error)
 })
 
