@@ -50,18 +50,18 @@
             show-icon
             :closable="false"
           />
-          <el-form label-width="120px" style="margin-top:50px">
+          <el-form label-width="120px" :model="companyInfo" style="margin-top:50px">
             <el-form-item label="公司名称">
-              <el-input disabled style="width:400px" />
+              <el-input v-model="companyInfo.name" disabled style="width:400px" />
             </el-form-item>
             <el-form-item label="公司地址">
-              <el-input disabled style="width:400px" />
+              <el-input v-model="companyInfo.companyAddress" disabled style="width:400px" />
             </el-form-item>
             <el-form-item label="邮箱">
-              <el-input disabled style="width:400px" />
+              <el-input v-model="companyInfo.mailbox" disabled style="width:400px" />
             </el-form-item>
             <el-form-item label="备注">
-              <el-input type="textarea" :rows="3" disabled style="width:400px" />
+              <el-input v-model="companyInfo.remarks" type="textarea" :rows="3" disabled style="width:400px" />
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -100,6 +100,7 @@ export default {
   },
   created() {
     this.RoleList()
+    this.getCompanyId()
   },
   methods: {
     async RoleList() {
@@ -125,6 +126,7 @@ export default {
     // 拿到当前行这条数据
     // 回显再新增角色的组件上
     editRole(row) {
+      // console.log(row)
       // row直接赋值给 addRole 的formData
       // 地址一样，指的是同一个对象
       this.$refs.addRole.formData = row

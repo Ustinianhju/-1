@@ -1,26 +1,20 @@
 <template>
   <div>
-    attendances
+    <UploadExcel />
   </div>
 </template>
-
+d
 <script>
+import UploadExcel from '@/components/UploadExcel/index.vue'
 export default {
   name: 'HrsaasIndex',
-
+  components: { UploadExcel },
   data() {
-    return {
-
-    }
+    return {}
   },
-
   mounted() {
-
   },
-
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 

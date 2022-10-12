@@ -60,6 +60,7 @@ export default {
     },
     async submit() {
       try {
+        // validate 表单校验，通过才继续执行
         await this.$refs.roleDialogForm.validate()
         this.loading = true
         this.formData.id ? await updateRole(this.formData) : await addRole(this.formData)
