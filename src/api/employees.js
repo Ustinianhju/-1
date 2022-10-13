@@ -27,3 +27,31 @@ export function delEmployee(id) {
     method: 'delete'
   })
 }
+
+export const getEmployeesInfo = (id) => {
+  return request({
+    url: `/employees/${id}/personalInfo`
+  })
+}
+
+export const saveEmployeesInfo = (data) => {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'PUT',
+    data
+  })
+}
+
+export const getEmployeesJobInfo = (id) => {
+  return request({
+    url: `/employees/${id}/jobs`
+  })
+}
+
+export const saveEmployeesJobsInfo = (data) => {
+  return request({
+    url: `/employees/${data.userId}/jobs`,
+    method: 'PUT',
+    data
+  })
+}

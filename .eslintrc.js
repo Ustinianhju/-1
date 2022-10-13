@@ -19,7 +19,9 @@ module.exports = {
       "multiline": {
         "max": 1,
         "allowFirstLine": false
-      }
+      },
+      'space-before-function-paren': 0,
+    'vue/multi-word-component-names': 0
     }],
     "vue/singleline-html-element-content-newline": "off",
     "vue/multiline-html-element-content-newline":"off",

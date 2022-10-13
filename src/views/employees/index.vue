@@ -3,9 +3,15 @@
     <PageTools>
       <span slot="before">共166条记录</span>
       <template slot="after">
-        <el-button size="small" type="warning" @click="$router.push('import')">导入</el-button>
-        <el-button size="small" type="danger" @click="exportExcle">导出</el-button>
-        <el-button size="small" type="primary" @click="handleAdd">新增员工</el-button>
+        <el-button size="small" type="warning" @click="$router.push('import')"
+          >导入</el-button
+        >
+        <el-button size="small" type="danger" @click="exportExcle"
+          >导出</el-button
+        >
+        <el-button size="small" type="primary" @click="handleAdd"
+          >新增员工</el-button
+        >
       </template>
     </PageTools>
     <!-- 放置表格和分页 -->
@@ -14,26 +20,36 @@
         <el-table-column label="序号" sortable="" width="80" type="index" />
         <el-table-column label="姓名" prop="username" />
         <el-table-column label="工号" prop="workNumber" />
-        <el-table-column :formatter="formatterFn" label="聘用形式" prop="formOfEmployment">
+        <el-table-column
+          :formatter="formatterFn"
+          label="聘用形式"
+          prop="formOfEmployment"
+        >
           <!-- <span>{{ row.formOfEmployment }}</span> -->
         </el-table-column>
         <el-table-column label="部门" prop="departmentName" />
         <el-table-column label="入职时间" sortable="">
-          <template slot-scope="{row}">{{ row.timeOfEntry|formatDate }}</template>
+          <template slot-scope="{ row }">{{
+            row.timeOfEntry | formatDate
+          }}</template>
         </el-table-column>
         <el-table-column label="账户状态" prop="enableState">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <el-switch :value="row.enableState === 1" />
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="280">
-          <template slot-scope="{row}">
-            <el-button type="text" size="small">查看</el-button>
+          <template slot-scope="{ row }">
+            <el-button type="text" size="small" @click="lookDetail(row)"
+              >查看</el-button
+            >
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
             <el-button type="text" size="small">角色</el-button>
-            <el-button type="text" size="small" @click="delBtn(row.id)">删除</el-button>
+            <el-button type="text" size="small" @click="delBtn(row.id)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -42,7 +58,7 @@
         <el-pagination
           layout="prev, pager, next,sizes,total"
           :total="total"
-          :page-sizes="[2,5,10]"
+          :page-sizes="[2, 5, 10]"
           :page-size.sync="pages.size"
           :current-page.sync="pages.page"
           @current-change="getEmployeeList"
@@ -66,7 +82,7 @@ import AddEmployees from '@/views/employees/components/add-employees.vue'
 export default {
   name: 'HrsaasIndex',
   components: { AddEmployees },
-  data() {
+  data () {
     return {
       pages: {
         page: 1,
@@ -79,26 +95,26 @@ export default {
       dialogVisible: false
     }
   },
-  mounted() {
+  mounted () {
     this.getEmployeeList()
   },
   methods: {
-    async getEmployeeList() {
+    async getEmployeeList () {
       this.loading = true
       const { rows, total } = await getEmployeeList(this.pages)
       this.list = rows
       this.total = total
       this.loading = false
     },
-    formatterFn(row, column, cellValue) {
+    formatterFn (row, column, cellValue) {
       const res = this.hireType.find(ele => ele.id === cellValue)
       return res && res.value || '非正式'
     },
-    handleAdd() {
+    handleAdd () {
       // 点击的时候，需要弹窗显示
       this.dialogVisible = true
     },
-    async delBtn(id) {
+    async delBtn (id) {
       this.$confirm('确认删除给员工吗？', '提示', {
         type: 'warning'
       })
@@ -107,7 +123,7 @@ export default {
       // 重新刷新页面
       this.getEmployeeList()
     },
-    async exportExcle() {
+    async exportExcle () {
       // 文件懒加载
       const { export_json_to_excel } = await import('@/vendor/Export2Excel.js')
       const { rows } = await getEmployeeList(this.pages)
@@ -124,8 +140,8 @@ export default {
       const header = Object.keys(exportExcelMapPath)
       const data = rows.map(item => {
         return header.map(h => {
-        // 循环表头是手机号
-        // return h
+          // 循环表头是手机号
+          // return h
           if (h === '聘用形式') {
             const find = this.hireType.find(hire => {
               return hire.id === item[exportExcelMapPath[h]]
@@ -144,11 +160,13 @@ export default {
         autoWidth: true, // 宽度自适应
         bookType: 'xlsx' // 类型 非必填
       })
+    },
+    lookDetail (row) {
+      this.$router.push('/employees/detail/' + row.id)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

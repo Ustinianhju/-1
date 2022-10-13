@@ -16,3 +16,11 @@ export const getUserFateilById = (id) => {
     url: `/sys/user/${id}`
   })
 }
+
+export const saveUserFateilById = (data) => {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'PUT',
+    data
+  })
+}
