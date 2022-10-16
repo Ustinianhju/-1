@@ -73,6 +73,7 @@ export default {
       }
     },
     tabClick() {
+      // 点击tabs保存cookies数据
       Cookies.set('activeName', this.activeName)
     }
   }

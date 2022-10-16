@@ -109,6 +109,7 @@ export default {
         const { rows, total } = await getRoleList(this.page)
         this.total = total
         this.roleList = rows
+        // console.log(this.roleList)
         // total大于0并且rows的length === 0 这种情况并不是正在的没有数据，是有的，要重新发起请求
         if (total > 0 && rows.length === 0) {
           this.page.page = this.page.page - 1

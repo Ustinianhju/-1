@@ -1,23 +1,29 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
-    <svg-icon icon-class="eye-open" />
+    <UploadImg @on-success="onSuccess" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import UploadImg from '@/components/UploadImg/index.vue'
 
 export default {
   name: 'Dashboard',
+  components: { UploadImg },
   computed: {
     ...mapGetters([
       'name'
     ])
-  }
-  // created() {
+  }, // created() {
   //   this.$store.dispatch('user/getUserInfo')
   // }
+  methods: {
+    onSuccess(val) {
+      console.log(123, val)
+    }
+  }
+
 }
 </script>
 

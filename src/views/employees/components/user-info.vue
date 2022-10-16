@@ -1,5 +1,6 @@
 <template>
   <div class="user-info">
+    <i class="el-icon-printer" @click="$router.push(`/employees/print/${userId}?type=personal`)" />
     <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
@@ -57,7 +58,7 @@
       <el-row class="inline-info">
         <el-col :span="12">
           <el-form-item label="员工头像">
-            <!-- 放置上传图片 -->
+            <UploadImg ref="uploadAcatar" :default-url="employeesAvatar" @on-success="uploadAvatarSuccess" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,7 +91,7 @@
         <!-- 员工照片 -->
 
         <el-form-item label="员工照片">
-          <!-- 放置上传图片 -->
+          <upload-img ref="uploadPics" :default-url="employeesPic" @on-success="uploadPic" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -392,75 +393,79 @@
 import EmployeeEnum from '@/api/constant/employees'
 import { getUserFateilById, saveUserFateilById } from '@/api/user'
 import { getEmployeesInfo, saveEmployeesInfo } from '@/api/employees'
+import UploadImg from '@/components/UploadImg/index.vue'
 export default {
+  components: { UploadImg },
   data() {
     return {
       userId: this.$route.params.id,
-      EmployeeEnum, // 员工枚举数据
+      EmployeeEnum,
       userInfo: {},
       formData: {
         userId: '',
-        username: '', // 用户名
-        sex: '', // 性别
-        mobile: '', // 手机
-        companyId: '', // 公司id
-        departmentName: '', // 部门名称
+        username: '',
+        sex: '',
+        mobile: '',
+        companyId: '',
+        departmentName: '',
         //  onTheJobStatus: '', // 在职状态 no
-        dateOfBirth: '', // 出生日期
-        timeOfEntry: '', // 入职时间
-        theHighestDegreeOfEducation: '', // 最高学历
-        nationalArea: '', // 国家
-        passportNo: '', // 护照号
-        idNumber: '', // 身份证号
-        idCardPhotoPositive: '', // 身份证照正
-        idCardPhotoBack: '', // 身份证照正
-        nativePlace: '', // 籍贯
-        nation: '', // 民族
-        englishName: '', // 英文名字
-        maritalStatus: '', // 婚姻状况
-        staffPhoto: '', // 员工照片
-        birthday: '', // 生日
-        zodiac: '', // 属相
-        age: '', // 年龄
-        constellation: '', // 星座
-        bloodType: '', // 血型
-        domicile: '', // 户籍所在地
-        politicalOutlook: '', // 政治面貌
-        timeToJoinTheParty: '', // 入党时间
-        archivingOrganization: '', // 存档机构
-        stateOfChildren: '', // 子女状态
-        doChildrenHaveCommercialInsurance: '1', // 保险状态
-        isThereAnyViolationOfLawOrDiscipline: '', // 违法违纪状态
-        areThereAnyMajorMedicalHistories: '', // 重大病史
-        qq: '', // QQ
-        wechat: '', // 微信
-        residenceCardCity: '', // 居住证城市
-        dateOfResidencePermit: '', // 居住证办理日期
-        residencePermitDeadline: '', // 居住证截止日期
-        placeOfResidence: '', // 现居住地
-        postalAddress: '', // 通讯地址
-        contactTheMobilePhone: '', // 联系手机
-        personalMailbox: '', // 个人邮箱
-        emergencyContact: '', // 紧急联系人
-        emergencyContactNumber: '', // 紧急联系电话
-        socialSecurityComputerNumber: '', // 社保电脑号
-        providentFundAccount: '', // 公积金账号
-        bankCardNumber: '', // 银行卡号
-        openingBank: '', // 开户行
-        educationalType: '', // 学历类型
-        graduateSchool: '', // 毕业学校
-        enrolmentTime: '', // 入学时间
-        graduationTime: '', // 毕业时间
-        major: '', // 专业
-        graduationCertificate: '', // 毕业证书
-        certificateOfAcademicDegree: '', // 学位证书
-        homeCompany: '', // 上家公司
-        title: '', // 职称
-        resume: '', // 简历
-        isThereAnyCompetitionRestriction: '', // 有无竞业限制
-        proofOfDepartureOfFormerCompany: '', // 前公司离职证明
+        dateOfBirth: '',
+        timeOfEntry: '',
+        theHighestDegreeOfEducation: '',
+        nationalArea: '',
+        passportNo: '',
+        idNumber: '',
+        idCardPhotoPositive: '',
+        idCardPhotoBack: '',
+        nativePlace: '',
+        nation: '',
+        englishName: '',
+        maritalStatus: '',
+        staffPhoto: '',
+        birthday: '',
+        zodiac: '',
+        age: '',
+        constellation: '',
+        bloodType: '',
+        domicile: '',
+        politicalOutlook: '',
+        timeToJoinTheParty: '',
+        archivingOrganization: '',
+        stateOfChildren: '',
+        doChildrenHaveCommercialInsurance: '1',
+        isThereAnyViolationOfLawOrDiscipline: '',
+        areThereAnyMajorMedicalHistories: '',
+        qq: '',
+        wechat: '',
+        residenceCardCity: '',
+        dateOfResidencePermit: '',
+        residencePermitDeadline: '',
+        placeOfResidence: '',
+        postalAddress: '',
+        contactTheMobilePhone: '',
+        personalMailbox: '',
+        emergencyContact: '',
+        emergencyContactNumber: '',
+        socialSecurityComputerNumber: '',
+        providentFundAccount: '',
+        bankCardNumber: '',
+        openingBank: '',
+        educationalType: '',
+        graduateSchool: '',
+        enrolmentTime: '',
+        graduationTime: '',
+        major: '',
+        graduationCertificate: '',
+        certificateOfAcademicDegree: '',
+        homeCompany: '',
+        title: '',
+        resume: '',
+        isThereAnyCompetitionRestriction: '',
+        proofOfDepartureOfFormerCompany: '',
         remarks: '' // 备注
-      }
+      },
+      employeesAvatar: '',
+      employeesPic: ''
     }
   },
   created() {
@@ -470,14 +475,23 @@ export default {
   methods: {
     async loadUserInfo() {
       const res = await getUserFateilById(this.userId)
+      if (res.staffPhoto) {
+        this.employeesAvatar = res.staffPhoto
+      }
       this.userInfo = res
     },
     async loadEmployees() {
       const res = await getEmployeesInfo(this.userId)
+      if (res.staffPhoto) {
+        this.employeesPic = res.staffPhoto
+      }
       this.formData = res
     },
     async saveEmployeesInfo() {
       try {
+        if (this.$refs.uploadPics.loading) {
+          return this.$message.error('头像还在上传中...')
+        }
         await saveEmployeesInfo(this.formData)
         this.$message.success('更新成功')
       } catch (error) {
@@ -485,8 +499,22 @@ export default {
       }
     },
     async saveUserInfo() {
-      await saveUserFateilById(this.userInfo)
-      this.$message.success('更新成功')
+      try {
+        if (this.$refs.uploadAcatar.loading) {
+          return this.$message.error('头像还在上传中...')
+        }
+        await saveUserFateilById(this.userInfo)
+        this.$message.success('更新成功')
+      } catch (error) {
+        this.$message.error('保存用户失败')
+      }
+    },
+    // 监听头像上传成功
+    uploadAvatarSuccess(data) {
+      this.userInfo.staffPhoto = data.imgUrl
+    },
+    uploadPic(data) {
+      this.formData.staffPhoto = data.imgUrl
     }
   }
 }
